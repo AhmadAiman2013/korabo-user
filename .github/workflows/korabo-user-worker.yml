@@ -1,4 +1,4 @@
-name: korabo-user-handler.yml
+name: korabo-user-worker.yml
 on:
   push:
     branches:

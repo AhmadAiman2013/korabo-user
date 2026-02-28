@@ -1,28 +1,35 @@
-use lambda_runtime::{tracing, Error, LambdaEvent};
+use std::sync::Arc;
+use lambda_runtime::{Error, LambdaEvent};
 use aws_lambda_events::event::sqs::SqsEvent;
+use lambda_runtime::tracing::log::error;
+use serde_json::from_str;
+use user_core::{UserRegisteredEvent, UserRepository};
 
-/// This is the main body for the function.
-/// Write your code inside it.
-/// There are some code example in the following URLs:
-/// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
-/// - https://github.com/aws-samples/serverless-rust-demo/
-pub(crate)async fn function_handler(event: LambdaEvent<SqsEvent>) -> Result<(), Error> {
-    // Extract some useful information from the request
-    let payload = event.payload;
-    tracing::info!("Payload: {:?}", payload);
+pub(crate)async fn function_handler(
+    event: LambdaEvent<SqsEvent>,
+    repo: Arc<UserRepository>
+) -> Result<(), Error> {
+    for record in event.payload.records {
+        let body= match record.body {
+            Some(b) => b,
+            None => {
+                error!("Received SQS record with no body, message_id: {:?}", record.message_id);
+                continue;
+            }
+        };
 
+        let user_event: UserRegisteredEvent = match from_str(&body) {
+            Ok(e) => e,
+            Err(err) => {
+
+                error!("Failed to deserialize message: {:?} body: {}", err, body);
+                continue;
+            }
+        };
+
+        repo.create_default_profile(&user_event).await?;
+    }
     Ok(())
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use lambda_runtime::{Context, LambdaEvent};
 
-    #[tokio::test]
-    async fn test_event_handler() {
-        let event = LambdaEvent::new(SqsEvent::default(), Context::default());
-        let response = function_handler(event).await.unwrap();
-        assert_eq!((), response);
-    }
-}

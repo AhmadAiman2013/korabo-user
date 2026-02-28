@@ -24,6 +24,7 @@ impl Default for PrivacySettings {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct UserProfile {
     pub user_id: String,
     pub email: String,

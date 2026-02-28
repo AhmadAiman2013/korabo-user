@@ -29,6 +29,7 @@ pub async fn get_user(
 
     let user_id = claims.sub;
     Json(json!({
+        "msg": "successfully",
         "user_id": user_id,
     }))
 }

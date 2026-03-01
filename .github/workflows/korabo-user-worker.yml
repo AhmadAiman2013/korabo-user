@@ -47,7 +47,6 @@ jobs:
             ${{ github.workspace }}/target/
           key: ${{ runner.os }}-cargo-user-worker-${{ hashFiles('packages/korabo-user-worker/Cargo.toml', 'packages/user-core/Cargo.toml', 'Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-cargo-
             ${{ runner.os }}-cargo-user-worker-
 
       - name: Install cargo-lambda (if not cached)

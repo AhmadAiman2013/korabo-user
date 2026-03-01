@@ -14,3 +14,4 @@ aws-sdk-dynamodb = "1.107.0"
 aws-config = "1.8.14"
 user-core = { path = "../user-core" }
 thiserror = "2.0.18"
+serde_dynamo = { version = "4.3.0", features = ["aws-sdk-dynamodb+1"] }

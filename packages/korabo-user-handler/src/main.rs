@@ -3,14 +3,14 @@ use std::sync::Arc;
 use aws_config::BehaviorVersion;
 use aws_sdk_dynamodb::Client;
 use axum::Router;
-use axum::routing::get;
+use axum::routing::{delete, get, post};
 use lambda_http::{run, tracing, Error};
 mod user_handler;
 mod error;
 
 use jwt::JwtPublicKey;
 use user_core::UserRepository;
-use crate::user_handler::{get_user, health_check, AppState};
+use crate::user_handler::{add_course, get_public_profile, get_user, health_check, remove_course, update_me, AppState};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -33,7 +33,10 @@ async fn main() -> Result<(), Error> {
         "/user",
         Router::new()
             .route("/health", get(health_check))
-            .route("/user", get(get_user))
+            .route("/user", get(get_user).post(update_me))
+            .route("/user/{user_id}", get(get_public_profile))
+            .route("/user/courses", post(add_course))
+            .route("/user/{course_id}", delete(remove_course))
             .with_state(state)
     );
 

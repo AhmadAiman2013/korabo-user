@@ -29,10 +29,60 @@ pub struct UserProfile {
     pub user_id: String,
     pub email: String,
     pub name: Option<String>,
-    pub interest: Vec<String>,
-    pub study_preference: Option<StudyPreferences>,
+    pub interests: Vec<String>,
+    pub study_preferences: Option<StudyPreferences>,
     pub privacy: PrivacySettings,
-    pub created_at: DateTime<Utc>
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct UpdateProfileRequest {
+    pub name: Option<String>,
+    pub interest: Option<Vec<String>>,
+    pub study_preferences: Option<StudyPreferences>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AddCourseRequest {
+    pub course_id: String,
+}
+
+impl AddCourseRequest {
+    pub fn normalized_course_id(&self) -> String {
+        self.course_id.trim().to_uppercase().replace(" ","")
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct CourseAddedEvent {
+    pub course_id: String,
+    pub user_id: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CourseItem {
+    pub course_id: String,
+    pub added_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ProfileItem {
+    #[serde(rename = "PK")]
+    pub pk: String,
+    #[serde(rename = "SK")]
+    pub sk: String,
+    #[serde(flatten)]
+    pub profile: UserProfile,
+}
+
+#[derive(Debug, Serialize)]
+pub struct CourseRecord {
+    #[serde(rename = "PK")]
+    pub pk: String,
+    #[serde(rename = "SK")]
+    pub sk: String,
+    pub course_id: String,
+    pub added_at: DateTime<Utc>,
 }
 
 

@@ -1393,6 +1393,7 @@ dependencies = [
  "axum",
  "jwt",
  "lambda_http",
+ "serde_dynamo",
  "serde_json",
  "thiserror",
  "tokio",

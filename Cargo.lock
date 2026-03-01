@@ -1388,11 +1388,15 @@ dependencies = [
 name = "korabo-user-handler"
 version = "0.1.0"
 dependencies = [
+ "aws-config",
+ "aws-sdk-dynamodb",
  "axum",
  "jwt",
  "lambda_http",
  "serde_json",
+ "thiserror",
  "tokio",
+ "user-core",
 ]
 
 [[package]]

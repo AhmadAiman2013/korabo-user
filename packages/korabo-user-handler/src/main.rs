@@ -1,10 +1,15 @@
 use std::env::{set_var, var};
+use std::sync::Arc;
+use aws_config::BehaviorVersion;
+use aws_sdk_dynamodb::Client;
 use axum::Router;
 use axum::routing::get;
 use lambda_http::{run, tracing, Error};
 mod user_handler;
-use jwt::JwtPublicKey;
+mod error;
 
+use jwt::JwtPublicKey;
+use user_core::UserRepository;
 use crate::user_handler::{get_user, health_check, AppState};
 
 #[tokio::main]
@@ -17,7 +22,12 @@ async fn main() -> Result<(), Error> {
         var("JWT_AUDIENCE").expect("JWT_AUDIENCE must be set"),
     ).expect("Failed to load JWKS");
 
-    let state = AppState{ jwt };
+    let config = aws_config::load_defaults(BehaviorVersion::latest()).await;
+    let client = Client::new(&config);
+    let table_name = String::from("korabo_user");
+    let repo = Arc::new(UserRepository::new(client, table_name));
+
+    let state = AppState{ jwt, repo };
 
     let app = Router::new().nest(
         "/user",

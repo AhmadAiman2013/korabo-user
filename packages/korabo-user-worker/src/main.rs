@@ -21,6 +21,5 @@ async fn main() -> Result<(), Error> {
         async move { function_handler(event, repo).await }
     }))
         .await
-    
-    // try worker workflow
+
 }

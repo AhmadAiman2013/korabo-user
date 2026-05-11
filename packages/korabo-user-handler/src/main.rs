@@ -36,7 +36,7 @@ async fn main() -> Result<(), Error> {
             .route("/user", get(get_user).post(update_me))
             .route("/user/{user_id}", get(get_public_profile))
             .route("/user/courses", post(add_course))
-            .route("/user/{course_id}", delete(remove_course))
+            .route("/user/courses/{course_id}", delete(remove_course))
             .with_state(state)
     );
 

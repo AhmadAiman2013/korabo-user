@@ -1,7 +1,7 @@
 use axum::http::StatusCode;
 use axum::Json;
 use axum::response::{IntoResponse, Response};
-use lambda_http::tracing::log::warn;
+use lambda_http::tracing::log::error;
 use serde_json::json;
 use thiserror::Error;
 use user_core::UserError;
@@ -29,7 +29,7 @@ impl IntoResponse for AppError {
                 format!("Profile with id {} not found", id),
                 ),
             AppError::Repository(e) => {
-                warn!("Repository error: {:?}", e);
+                error!("Repository error: {:?}", e);
                     (
                         StatusCode::INTERNAL_SERVER_ERROR,
                         "korabo_user_404",

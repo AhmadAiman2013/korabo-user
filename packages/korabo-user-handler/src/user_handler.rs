@@ -45,8 +45,8 @@ pub async fn get_user(
             "email": p.email,
             "name": p.name,
             "courses": courses?,
-            "interests": p.interests,
-            "study_preference": p.study_preferences,
+            "interests": p.interest,
+            "study_preference": p.study_preference,
             "privacy": p.privacy,
         }))),
     }
@@ -69,8 +69,8 @@ pub async fn get_public_profile(
     let mut body = json!({
         "user_id": profile.user_id,
         "name": profile.name,
-        "interests": profile.interests,
-        "studyPreferences": profile.study_preferences,
+        "interests": profile.interest,
+        "studyPreferences": profile.study_preference,
     });
 
     if profile.privacy.show_courses {

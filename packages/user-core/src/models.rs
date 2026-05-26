@@ -29,8 +29,8 @@ pub struct UserProfile {
     pub user_id: String,
     pub email: String,
     pub name: Option<String>,
-    pub interests: Vec<String>,
-    pub study_preferences: Option<StudyPreferences>,
+    pub interest: Vec<String>,
+    pub study_preference: Option<StudyPreferences>,
     pub privacy: PrivacySettings,
     pub created_at: DateTime<Utc>,
 }
